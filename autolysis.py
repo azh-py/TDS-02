@@ -100,10 +100,7 @@ def fetch_narrative_from_api(payload):
     }
     response = httpx.post(api_url, headers=headers, json=payload, timeout=30)
     response.raise_for_status()
-<<<<<<< HEAD
-=======
     log_message(f"API Response: {response.json()}")  # Debug logging
->>>>>>> c03b29b (Updated analysis outputs for all datasets)
     return response.json()
 
 def create_prompt(df):
@@ -127,15 +124,9 @@ def generate_narrative(df):
     try:
         result = fetch_narrative_from_api(payload)
         return result['choices'][0]['message']['content']
-<<<<<<< HEAD
-    except Exception as e:
-        log_message(f"Error generating narrative: {e}")
-        return "Error generating narrative. Please check your dataset or API usage."
-=======
     except KeyError as e:
         log_message(f"KeyError in API response: {e}")
         return "Narrative generation failed. Please check the API response."
->>>>>>> c03b29b (Updated analysis outputs for all datasets)
 
 def save_summary_statistics(df, output_dir):
     stats_file = os.path.join(output_dir, "summary_statistics.txt")
@@ -178,7 +169,3 @@ if __name__ == "__main__":
         print("Usage: uv run autolysis.py <dataset.csv>")
         sys.exit(1)
     main(sys.argv[1])
-<<<<<<< HEAD
-
-=======
->>>>>>> c03b29b (Updated analysis outputs for all datasets)
