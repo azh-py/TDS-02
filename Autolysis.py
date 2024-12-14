@@ -139,6 +139,10 @@ def main(file_path):
     narrative = generate_narrative(df)
     save_readme(narrative, output_dir)
     log_message("Analysis completed.")
+def generate_summary_statistics(df):
+    summary_stats = df.describe(include='all').to_string()
+    log_message("Generated summary statistics.")
+    return summary_stats
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
