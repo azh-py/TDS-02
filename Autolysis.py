@@ -143,6 +143,42 @@ def generate_summary_statistics(df):
     summary_stats = df.describe(include='all').to_string()
     log_message("Generated summary statistics.")
     return summary_stats
+def create_prompt(df):
+    prompt = f"""
+    You are a data analyst. Provide insights on the following dataset:
+    - Number of Rows: {len(df)}
+    - Number of Columns: {len(df.columns)}
+    - Column Data Types: {df.dtypes.to_dict()}
+    Provide key trends, anomalies, and interesting findings.
+    """
+    log_message("Generated API prompt.")
+    return prompt
+def visualize_heatmap(df, numeric_columns, output_dir):
+    if len(numeric_columns) > 1:
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(df[numeric_columns].corr(), annot=True, cmap="coolwarm")
+        plt.title("Correlation Heatmap")
+        output_file = os.path.join(output_dir, "correlation_heatmap.png")
+        plt.savefig(output_file, dpi=300, bbox_inches='tight')
+        plt.close()
+        log_message(f"Saved heatmap as {output_file}")
+import glob
+
+def verify_output_files(output_dir):
+    required_files = glob.glob(os.path.join(output_dir, "*.png"))
+    if not required_files:
+        raise RuntimeError(f"No output files found in {output_dir}. Check for issues.")
+    if not os.path.exists(os.path.join(output_dir, "README.md")):
+        raise RuntimeError(f"README.md missing in {output_dir}.")
+    log_message("Output verification successful.")
+
+def process_all_datasets():
+    csv_files = glob.glob("*.csv")
+    if not csv_files:
+        raise RuntimeError("No CSV files found in the current directory.")
+    for file in csv_files:
+        log_message(f"Processing dataset: {file}")
+        main(file)
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
